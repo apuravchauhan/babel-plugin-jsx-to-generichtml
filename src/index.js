@@ -1,6 +1,17 @@
 export default function (babel) {
   const t = babel.types;
- 
+
+  function parseAsString(expression) {
+    const ast = {
+      type: 'Program',
+      body: [t.expressionStatement(expression)]
+    };
+    let code = babel.transformFromAst(ast).code;
+    if (code.endsWith(';')) {
+      code = code.slice(0, code.length - 1);
+    }
+    return code;
+  }
   function processLogicalExp(path, lazyTags) {
     let exp = path.node.expression;
     let body = exp.right;
@@ -18,9 +29,10 @@ export default function (babel) {
     }
     let logicType = exp.operator;
     let logic = exp.left;
+    let stringexp = parseAsString(exp.left);
     //create pseudo element
     let pseudo = t.jSXIdentifier('PLUGIN-CONDITION');
-    let pseudoDataAttr = t.jSXAttribute(t.jSXIdentifier('data'), t.jSXExpressionContainer(logic));
+    let pseudoDataAttr = t.jSXAttribute(t.jSXIdentifier('data'), t.stringLiteral(stringexp));
     let pseudoTypeAttr = t.jSXAttribute(t.jSXIdentifier('type'), t.stringLiteral(logicType));
     let pseudoOpen = t.jSXOpeningElement(pseudo, [pseudoDataAttr, pseudoTypeAttr], false);
     let pseudoClose = t.jSXClosingElement(t.jSXIdentifier('PLUGIN-CONDITION'));
