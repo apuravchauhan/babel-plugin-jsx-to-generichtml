@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-jsx-to-generichtml",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "An experimental babel plugin to convert JSX contained in React/ Preact classes's render function to Generic HTML. This HTML can be further transpiled into different Java or any other language template engine",
   "main": "lib/index.js",
   "devDependencies": {
